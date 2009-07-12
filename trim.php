@@ -88,7 +88,7 @@ class TrimBehavior extends ModelBehavior {
 					break;
 				case 'agd' :
 					$apiUrl = "http://a.gd/?module=ShortURL&file=Add&mode=API&url=";
-					break
+					break;
 				default :
 					// Assume the user has set their own api url
 					$apiURL = $api;
