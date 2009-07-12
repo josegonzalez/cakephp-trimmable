@@ -3,7 +3,6 @@
  * Tr.im Behavior
  * 
  * Automatically saves a short url to the current record
- * 
  *
  * @package app
  * @author Jose Diaz-Gonzalez
@@ -49,7 +48,7 @@ class TrimBehavior extends ModelBehavior {
 					//Build the URL...
 					$controllerName = Inflector::tableize($model->alias);
 					$controllerName = Inflector::variable($controllerName);
-					$url = Router::url('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->data[$model->alias][$model->primaryKey]);
+					$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->data[$model->alias][$model->primaryKey]));
 					$model->data[$model->alias][$field] = $this->trimURL($url, $this->__settings[$model->alias]['api']);
 				}
 			}
@@ -68,7 +67,7 @@ class TrimBehavior extends ModelBehavior {
 					//Build the URL...
 					$controllerName = Inflector::tableize($model->alias);
 					$controllerName = Inflector::variable($controllerName);
-					$url = Router::url('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->id);
+					$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->data[$model->alias][$model->primaryKey]));
 					$trimmedURL = $this->trimURL($url, $this->__settings[$model->alias]['api']);
 					$fieldToSaveTo = $model->alias . $field;
 					$model->saveField($fieldToSaveTo, $trimmedURL, true);
@@ -78,29 +77,12 @@ class TrimBehavior extends ModelBehavior {
 		return $return;
 	}
 
-	public function saveUrl(&$model) {
-		if(isset($model->id) && !empty($model->id)) {
-			$field = $this->__settings[$model->alias]['field'];
-			if (!$model->hasField($field)) {
-			} else {
-				//Build the URL...
-				$controllerName = Inflector::tableize($model->alias);
-				$controllerName = Inflector::variable($controllerName);
-				$url = Router::url('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->id);
-				$trimmedURL = $this->trimURL($url, $this->__settings[$model->alias]['api']);
-				$fieldToSaveTo = $model->alias . $field;
-				return $model->saveField($fieldToSaveTo, $trimmedURL, true);
-			}
-		}
-		return false;
-	}
-
 	public function trimURL($url = null, $api = 'tinyurl') {
 		if (isset($url) && !empty($url)){
 			switch ($api) {
 				case 'tinyurl' :
 					$apiUrl = "http://tinyurl.com/api-create.php?url=";
-					break
+					break;
 				case 'trim' :
 					$apiUrl = "http://api.tr.im/api/trim_simple?url=";
 					break;
