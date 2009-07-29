@@ -17,7 +17,7 @@ class TrimBehavior extends ModelBehavior {
 		$default = array(
 			'action' => 'view',
 			'api' => 'tinyurl',
-			'mode' => 'update',
+			'mode' => 'create',
 			'field' => 'shorturl'
 		);
 
