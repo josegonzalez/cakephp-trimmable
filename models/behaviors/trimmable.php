@@ -19,6 +19,7 @@ class TrimmableBehavior extends ModelBehavior {
 			'api' => 'tinyurl',
 			'mode' => 'create',
 			'field' => 'shorturl'
+			'fields' => $model->primaryKey
 		);
 
 		if (!isset($this->__settings[$model->alias])) {
@@ -42,9 +43,9 @@ class TrimmableBehavior extends ModelBehavior {
 			$field = $this->__settings[$model->alias]['field'];
 			if ($model->hasField($field)) {
 				//Build the URL...
-				$controllerName = Inflector::tableize($model->alias);
-				$controllerName = Inflector::variable($controllerName);
-				$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->data[$model->alias][$model->primaryKey]));
+				$controllerName = Inflector::variable(Inflector::tableize($model->alias));
+				$params = $this->_getParams(&$model, $this->__settings[$model->alias]['fields']);
+				$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $params));
 				$model->data[$model->alias][$field] = $this->trimURL($url, $this->__settings[$model->alias]['api']);
 			}
 		}
@@ -58,12 +59,11 @@ class TrimmableBehavior extends ModelBehavior {
 			$field = $this->__settings[$model->alias]['field'];
 			if ($model->hasField($field)) {
 				//Build the URL...
-				$controllerName = Inflector::tableize($model->alias);
-				$controllerName = Inflector::variable($controllerName);
-				$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $model->data[$model->alias][$model->primaryKey]));
+				$controllerName = Inflector::variable(Inflector::tableize($model->alias));
+				$params = $this->_getParams(&$model, $this->__settings[$model->alias]['fields']);
+				$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $params));
 				$trimmedURL = $this->trimURL($url, $this->__settings[$model->alias]['api']);
-				$fieldToSaveTo = $model->alias . $field;
-				$model->saveField($fieldToSaveTo, $trimmedURL, true);
+				$model->saveField($model->alias . $field, $trimmedURL, true);
 			}
 		}
 		return $return;
@@ -89,6 +89,28 @@ class TrimmableBehavior extends ModelBehavior {
 			return file_get_contents($apiUrl . $url);
 		}
 		return false;
+	}
+
+	public function _getParams(&$model, $fields = array()) {
+		if (isset($fields) and !is_array($fields)) {
+			$fields = array($fields);
+		}
+		
+		$ret = '';
+		$fieldsCount = count($fields) - 1;
+		foreach ($fields as $key => &$field) {
+			if ($model->hasField($field)) {
+				$ret += $model->data[$model->alias][$field];
+				if ($key < $fieldsCount) {
+					$ret += '/';
+				}
+			}
+		}
+
+		if ($ret == '') {
+			return $model->data[$model->alias][$model->primaryKey];
+		}
+		return $ret;
 	}
 } // End of TrimBehavior
 ?>
