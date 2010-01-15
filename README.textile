@@ -1,57 +1,50 @@
-Trimmable Behavior neatly turns the current resource into a trim, tinyurl, or agd url
+Trimmable Behavior neatly turns the current resource into a trim, tinyurl, or agd URL
 
-## Background
+h2. Background
+
 On a recent project, I needed to quickly tweet some information whenever I updated a post. The tweet required a link to the post as well, and thusly the idea for this behavior was born.
 
-The behavior depends upon a.gd, tinyurl, or tr.im . You can also specify your own special api, but the entire thing simply does a file_get_contents(), so be warned. YMMV.
+The behavior depends upon a.gd, tinyurl, or tr.im . You can also specify your own special api, but the entire thing simply does a @file_get_contents()@, so be warned. YMMV.
 
-## Requirements
-A server that allows you to use file_get_contents()
+h2. Requirements
 
-## Installation
-- Clone from github : in your plugin directory type `git clone git://github.com/josegonzalez/trim-behavior.git trim`
-- Add as a git submodule : in your plugin directory type `git submodule add git://github.com/josegonzalez/trim-behavior.git trim`
-- Download an archive from github and extract it in `/plugins/trim`
+A server that allows you to use @file_get_contents()@
 
-## Usage
-1. In the model that needs to be trimmed, add :
+h2. Installation
 
-	`var $actsAs = array('Trimmable');`
+* Clone from github : in your plugin directory type @git clone git://github.com/josegonzalez/trim-behavior.git trim@
+* Add as a git submodule : in your plugin directory type @git submodule add git://github.com/josegonzalez/trim-behavior.git trim@
+* Download an archive from github and extract it in @/plugins/trim@
 
-2. Configuration
- - Changing the action
+h2. Usage
 
-	`var $actsAs = array('Trimmable' => array('action' => 'show'));`
-
- - Using a different built-in API
-
-	`var $actsAs = array('Trimmable' => array('api' => 'agd'));`
-
- - Specifying your own custom API
-
-	`var $actsAs = array('Trimmable' => array('api' => 'http://smallu.rl/api/new/'));`
-
- - Create a new url on the update instead of create
-
-	`var $actsAs = array('Trimmable' => array('mode' => 'update'));`
-
- - Specifying a field other than the primaryKey as parameters to your action
-
-	`var $actsAs = array('Trimmable' => array('fields' => 'slug'));`
-
- - Specifying multiple fields (in order!) instead of the primaryKey as parameters to your action
-
-	`var $actsAs = array('Trimmable' => array('fields' => array('id', 'slug')));`
+# In the model that needs to be trimmed, add :
+	@var $actsAs = array('Trimmable');@
+# Configuration
+** Changing the action
+	@var $actsAs = array('Trimmable' => array('action' => 'show'));@
+** Using a different built-in API
+	@var $actsAs = array('Trimmable' => array('api' => 'agd'));@
+** Specifying your own custom API
+	@var $actsAs = array('Trimmable' => array('api' => 'http://smallu.rl/api/new/'));@
+** Create a new url on the update instead of create
+	@var $actsAs = array('Trimmable' => array('mode' => 'update'));@
+** Specifying a field other than the primaryKey as parameters to your action
+	@var $actsAs = array('Trimmable' => array('fields' => 'slug'));@
+** Specifying multiple fields (in order!) instead of the primaryKey as parameters to your action
+	@var $actsAs = array('Trimmable' => array('fields' => array('id', 'slug')));@
 
 At this point, everything should theoretically work.
 
-## Notes
-By default, it only creates the trimmed url on creation of the record. This means it triggers a "saveField()" call if done on the update, so be warned that this may screw with other behaviors.
+h2. Notes
+
+By default, it only creates the trimmed url on creation of the record. This means it triggers a @Modell::saveField()@ call if done on the update, so be warned that this may screw with other behaviors.
 
 Because Tr.im kinda is in limbo (as of around September), this behavior defaults to Tinyurl.
 
-## TODO:
+h2. Todo:
+
 1. <del>Better code commenting</del>
-2. Remove the file_get_contents() dependency (perhaps a datasource of some sort)
+2. Remove the @file_get_contents()@ dependency (perhaps a datasource of some sort)
 3. <del>Show how to set different APIs for the behavior in this readme</del>
 4. <del>Fix the behavior so that the auto setting really does work.</del>
