@@ -11,9 +11,9 @@
  **/
 class TrimmableBehavior extends ModelBehavior {
 
-	var $__settings = array();
+	var $settings = array();
 
-	function setup(&$model, $settings = array()) {
+	function setup(&$model, $config = array()) {
 		$default = array(
 			'action' => 'view',
 			'api' => 'tinyurl',
@@ -22,13 +22,13 @@ class TrimmableBehavior extends ModelBehavior {
 			'fields' => $model->primaryKey
 		);
 
-		if (!isset($this->__settings[$model->alias])) {
-			$this->__settings[$model->alias] = $default;
+		if (!isset($this->settings[$model->alias])) {
+			$this->settings[$model->alias] = $default;
 		}
 
-		$settings = (is_array($settings)) ? $settings : array();
-		$this->__settings[$model->alias] = array_merge(
-			$this->__settings[$model->alias], $settings
+		$config = (is_array($config)) ? $config : array();
+		$this->settings[$model->alias] = array_merge(
+			$this->settings[$model->alias], $config
 		);
 		
 	}
@@ -37,16 +37,16 @@ class TrimmableBehavior extends ModelBehavior {
 		$return = parent::beforeSave($model);
 
 		// What is the field that should hold this?
-		if(in_array($this->__settings[$model->alias]['mode'], array('update', 'auto')) 
+		if(in_array($this->settings[$model->alias]['mode'], array('update', 'auto')) 
 		and isset($model->data[$model->alias][$model->primaryKey])
 		and !empty($model->data[$model->alias][$model->primaryKey])) {
-			$field = $this->__settings[$model->alias]['field'];
+			$field = $this->settings[$model->alias]['field'];
 			if ($model->hasField($field)) {
 				//Build the URL...
 				$controllerName = Inflector::variable(Inflector::tableize($model->alias));
-				$params = $this->_getParams(&$model, $this->__settings[$model->alias]['fields']);
-				$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $params));
-				$model->data[$model->alias][$field] = $this->trimURL($url, $this->__settings[$model->alias]['api']);
+				$params = $this->_getParams(&$model, $this->settings[$model->alias]['fields']);
+				$url = Router::url(array('controller' => $controllerName, 'action' => $this->settings[$model->alias]['action'], $params));
+				$model->data[$model->alias][$field] = $this->trimURL($url, $this->settings[$model->alias]['api']);
 			}
 		}
 		return $return;
@@ -55,14 +55,14 @@ class TrimmableBehavior extends ModelBehavior {
 	public function afterSave(&$model, $created) {
 		$return = parent::afterSave($model, $created);
 
-		if(($this->__settings[$model->alias]['mode'] == 'create') and isset($model->id) and !empty($model->id)) {
-			$field = $this->__settings[$model->alias]['field'];
+		if(($this->settings[$model->alias]['mode'] == 'create') and isset($model->id) and !empty($model->id)) {
+			$field = $this->settings[$model->alias]['field'];
 			if ($model->hasField($field)) {
 				//Build the URL...
 				$controllerName = Inflector::variable(Inflector::tableize($model->alias));
-				$params = $this->_getParams(&$model, $this->__settings[$model->alias]['fields']);
-				$url = Router::url(array('controller' => $controllerName, 'action' => $this->__settings[$model->alias]['action'], $params));
-				$trimmedURL = $this->trimURL($url, $this->__settings[$model->alias]['api']);
+				$params = $this->_getParams(&$model, $this->settings[$model->alias]['fields']);
+				$url = Router::url(array('controller' => $controllerName, 'action' => $this->settings[$model->alias]['action'], $params));
+				$trimmedURL = $this->trimURL($url, $this->settings[$model->alias]['api']);
 				$model->saveField($model->alias . $field, $trimmedURL, true);
 			}
 		}
