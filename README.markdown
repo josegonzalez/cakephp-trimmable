@@ -1,4 +1,4 @@
-Trim Behavior neatly turns the current resource into a trim, tinyurl, or agd url
+Trimmable Behavior neatly turns the current resource into a trim, tinyurl, or agd url
 
 ## Background
 On a recent project, I needed to quickly tweet some information whenever I updated a post. The tweet required a link to the post as well, and thusly the idea for this behavior was born.
@@ -14,13 +14,29 @@ A server that allows you to use file_get_contents()
 - Download an archive from github and extract it in `/plugins/trim`
 
 ## Usage
-2. In the model that needs to be trimmed, add :
-	var $actsAs = array('Trim');
+1. In the model that needs to be trimmed, add :
+	`var $actsAs = array('Trimmable');`
+2. Configuration
+  - Changing the action
+	`var $actsAs = array('Trimmable' => array('action' => 'show'));`
+  - Using a different built-in API
+	`var $actsAs = array('Trimmable' => array('api' => 'agd'));`
+  - Specifying your own custom API
+	`var $actsAs = array('Trimmable' => array('api' => 'http://smallu.rl/api/new/'));`
+  - Create a new url on the update instead of create
+	`var $actsAs = array('Trimmable' => array('mode' => 'update'));`
+  - Specifying a field other than the primaryKey as parameters to your action
+	`var $actsAs = array('Trimmable' => array('fields' => 'slug'));`
+  - Specifying multiple fields (in order!) instead of the primaryKey as parameters to your action
+	`var $actsAs = array('Trimmable' => array('fields' => array('id', 'slug')));`
 
-At this point, everything should theoretically work. Note that by default, it only creates the trimmed url on creation of the record. This means it triggers a "saveField()" call, so be warned that this may screw with other behaviors.
+At this point, everything should theoretically work.
+
+## Notes
+By default, it only creates the trimmed url on creation of the record. This means it triggers a "saveField()" call if done on the update, so be warned that this may screw with other behaviors.
+
+Because Tr.im kinda is in limbo (as of around September), this behavior defaults to Tinyurl.
 
 ## TODO:
 1. Better code commenting
 2. Remove the file_get_contents() dependency (perhaps a datasource of some sort)
-3. Show how to set different APIs for the behavior in this readme
-4. Fix the behavior so that the auto setting really does work.
