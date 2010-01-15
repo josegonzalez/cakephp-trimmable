@@ -15,19 +15,32 @@ A server that allows you to use file_get_contents()
 
 ## Usage
 1. In the model that needs to be trimmed, add :
+
 	`var $actsAs = array('Trimmable');`
+
 2. Configuration
-  - Changing the action
+ - Changing the action
+
 	`var $actsAs = array('Trimmable' => array('action' => 'show'));`
-  - Using a different built-in API
+
+ - Using a different built-in API
+
 	`var $actsAs = array('Trimmable' => array('api' => 'agd'));`
-  - Specifying your own custom API
+
+ - Specifying your own custom API
+
 	`var $actsAs = array('Trimmable' => array('api' => 'http://smallu.rl/api/new/'));`
-  - Create a new url on the update instead of create
+
+ - Create a new url on the update instead of create
+
 	`var $actsAs = array('Trimmable' => array('mode' => 'update'));`
-  - Specifying a field other than the primaryKey as parameters to your action
+
+ - Specifying a field other than the primaryKey as parameters to your action
+
 	`var $actsAs = array('Trimmable' => array('fields' => 'slug'));`
-  - Specifying multiple fields (in order!) instead of the primaryKey as parameters to your action
+
+ - Specifying multiple fields (in order!) instead of the primaryKey as parameters to your action
+
 	`var $actsAs = array('Trimmable' => array('fields' => array('id', 'slug')));`
 
 At this point, everything should theoretically work.
@@ -38,5 +51,7 @@ By default, it only creates the trimmed url on creation of the record. This mean
 Because Tr.im kinda is in limbo (as of around September), this behavior defaults to Tinyurl.
 
 ## TODO:
-1. Better code commenting
+1. <del>Better code commenting</del>
 2. Remove the file_get_contents() dependency (perhaps a datasource of some sort)
+3. <del>Show how to set different APIs for the behavior in this readme</del>
+4. <del>Fix the behavior so that the auto setting really does work.</del>
