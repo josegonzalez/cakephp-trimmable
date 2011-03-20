@@ -35,7 +35,7 @@ class TrimmableBehavior extends ModelBehavior {
 			'action' => 'view',
 			'api' => 'tinyurl',
 			'mode' => 'create',
-			'field' => 'shorturl'
+			'field' => 'shorturl',
 			'fields' => $model->primaryKey
 		);
 
